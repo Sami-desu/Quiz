@@ -1,9 +1,10 @@
 import { GoogleGenAI, Chat } from "@google/genai";
+import { getApiKey } from './apiKeyService';
 
 export const createChatSession = (): Chat | null => {
-    const apiKey = import.meta.env.VITE_API_KEY;
+    const apiKey = getApiKey();
     if (!apiKey) {
-        console.error("API key for Gemini is required. Make sure to set VITE_API_KEY in your .env file.");
+        console.error("API key for Gemini is required. Please provide one in the UI.");
         return null;
     }
     
