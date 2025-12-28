@@ -1,6 +1,7 @@
-## Đây là bài tập nhà trường giao
+# Đây là bài tập nhà trường giao
+## Sản phẩm sáng tạo tạo bởi AI 
+## Vì vậy sản phẩm này hoàn toàn do sự hỗ trợ của Gemini 2.5 pro và Github Copilot làm ra
 ## Đề bài
-# Sản phẩm sáng tạo tạo bởi AI 
 Mỗi nhóm phải tạo ít nhất 1 sản phẩm có sử dụng công cụ AI.
 Hình thức sản phẩm (chọn 1 hoặc kết hợp):
 Video ngắn (từ 30s trở lên)
@@ -19,8 +20,6 @@ Canva AI (infographic, poster)
 DALL·E / Midjourney (hình ảnh)
 Veo3 (video)
 Suno / Soundraw (âm nhạc)……
-
-# Vì vậy sản phẩm này hoàn toàn do sự hỗ trợ của Gemini 2.5 pro và Github Copilot làm ra
 
 # Quiz Học Tập Thông Minh
 
