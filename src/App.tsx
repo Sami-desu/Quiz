@@ -6,10 +6,13 @@ import QuizSelection from './components/QuizSelection';
 import QuizView from './components/QuizView';
 import ResultsView from './components/ResultsView';
 import Chatbot from './components/Chatbot';
+import ApiKeyPrompt from './components/ApiKeyPrompt';
+import { setApiKey, getApiKey } from './services/apiKeyService';
 
 type View = 'HOME' | 'QUIZ_SELECTION' | 'QUIZ' | 'RESULTS';
 
 const App: React.FC = () => {
+  const [isKeySet, setIsKeySet] = useState(!!getApiKey());
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [view, setView] = useState<View>('HOME');
   const [selectedSubject, setSelectedSubject] = useState<Subject | null>(null);
@@ -20,6 +23,11 @@ const App: React.FC = () => {
   useEffect(() => {
     setSubjects(getAvailableQuizzes());
   }, []);
+
+  const handleApiKeySubmit = (key: string) => {
+    setApiKey(key);
+    setIsKeySet(true);
+  };
 
   const handleSelectSubject = (subject: Subject) => {
     setSelectedSubject(subject);
@@ -115,13 +123,22 @@ const App: React.FC = () => {
     </>
   );
 
+  if (!isKeySet) {
+    return (
+      <div className="bg-slate-900 min-h-screen text-white relative overflow-hidden flex items-center justify-center p-4">
+        {backgroundView}
+        <ApiKeyPrompt onSubmit={handleApiKeySubmit} />
+      </div>
+    );
+  }
+
   return (
     <div className="bg-slate-900 min-h-screen text-white relative overflow-hidden">
       {backgroundView}
       <main className="relative z-10 container mx-auto p-4 md:p-8 flex flex-col items-center justify-center min-h-screen">
         {renderContent()}
       </main>
-      <Chatbot />
+      <Chatbot isKeySet={isKeySet} />
     </div>
   );
 };

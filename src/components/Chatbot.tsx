@@ -8,24 +8,35 @@ interface Message {
   sender: 'user' | 'bot';
 }
 
-const Chatbot: React.FC = () => {
+interface ChatbotProps {
+  isKeySet: boolean;
+}
+
+const Chatbot: React.FC<ChatbotProps> = ({ isKeySet }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [chat, setChat] = useState<Chat | null>(null);
-  const [messages, setMessages] = useState<Message[]>([
-    { text: 'Chào bạn, tôi là trợ lý học tập AI. Bạn cần giúp gì không?', sender: 'bot' }
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const session = createChatSession();
-    if (session) {
-      setChat(session);
+    if (isKeySet) {
+      const session = createChatSession();
+      setMessages([
+        { text: 'Chào bạn, tôi là trợ lý học tập AI. Bạn cần giúp gì không?', sender: 'bot' }
+      ]);
+      if (session) {
+        setChat(session);
+      } else {
+        setMessages(prev => [...prev, { text: 'Không thể khởi tạo trợ lý AI. Vui lòng kiểm tra lại cấu hình API key.', sender: 'bot' }]);
+      }
     } else {
-      setMessages(prev => [...prev, { text: 'Không thể khởi tạo trợ lý AI. Vui lòng kiểm tra lại cấu hình API key.', sender: 'bot' }]);
+        setMessages([
+            { text: 'Vui lòng nhập API key để bắt đầu trò chuyện.', sender: 'bot'}
+        ]);
     }
-  }, []);
+  }, [isKeySet]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -112,7 +123,7 @@ const Chatbot: React.FC = () => {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyPress={handleKeyPress}
-                placeholder={!chat ? "Khởi tạo trợ lý..." : "Nhập câu hỏi của bạn..."}
+                placeholder={!chat ? "Nhập API key để bắt đầu" : "Nhập câu hỏi của bạn..."}
                 className="flex-1 bg-transparent px-5 py-3 text-white placeholder-slate-400 focus:outline-none"
                 disabled={isLoading || !chat}
               />
