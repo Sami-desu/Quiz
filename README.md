@@ -1,27 +1,27 @@
-## Đây là bài tập nhà trường giao
+# Đây là bài tập nhà trường giao
+## Sản phẩm sáng tạo tạo bởi AI 
+## Vì vậy sản phẩm này hoàn toàn do sự hỗ trợ của Gemini 2.5 pro và Github Copilot làm ra
 ## Đề bài
-# Sản phẩm sáng tạo tạo bởi AI 
-Mỗi nhóm phải tạo ít nhất 1 sản phẩm có sử dụng công cụ AI.
-Hình thức sản phẩm (chọn 1 hoặc kết hợp):
-Video ngắn (từ 30s trở lên)
-Truyện tranh / comic
-Infographic
-Bài hát / đoạn nhạc
-Câu chuyện ngắn / kịch bản 
-Chatbot mô phỏng (không cần code phức tạp)
-Sản phẩm sáng tạo khác 
-Yêu cầu:Phải nêu rõ công cụ AI đã sử dụng
-Sản phẩm phù hợp với chủ đề đã chọn
-Có ý nghĩa truyền thông / giáo dục / minh họa
-Ví dụ công cụ AI có thể dùng:
-ChatGPT (viết nội dung, kịch bản)
-Canva AI (infographic, poster)
-DALL·E / Midjourney (hình ảnh)
-Veo3 (video)
-Suno / Soundraw (âm nhạc)……
+Mỗi nhóm phải tạo **ít nhất 01 sản phẩm có sử dụng công cụ AI**.
 
-# Vì vậy sản phẩm này hoàn toàn do sự hỗ trợ của Gemini 2.5 pro và Github Copilot làm ra
+### Hình thức sản phẩm (chọn 1 hoặc kết hợp)
+- Video ngắn (từ 30 giây trở lên)
+- Truyện tranh / Comic
+- Infographic
+- Bài hát / Đoạn nhạc
+- Câu chuyện ngắn / Kịch bản
+- Chatbot mô phỏng (không cần code phức tạp)
+- Hình thức sáng tạo khác
 
+---
+
+## Yêu cầu
+- Nêu rõ **công cụ AI đã sử dụng**
+- Sản phẩm phù hợp với **chủ đề đã chọn**
+- Có **ý nghĩa giáo dục / truyền thông / minh họa**
+- Thể hiện được sự sáng tạo của nhóm
+
+------
 # Quiz Học Tập Thông Minh
 
 Một ứng dụng web trắc nghiệm học tập tương tác, được xây dựng bằng React, TypeScript và Tailwind CSS. Ứng dụng tích hợp chatbot Gemini AI để hỗ trợ người dùng giải đáp thắc mắc và nâng cao trải nghiệm học tập.
@@ -47,7 +47,7 @@ Một ứng dụng web trắc nghiệm học tập tương tác, được xây d
 
 2.  **Khởi động ứng dụng**:
     -   Khi truy cập trang web, bạn sẽ thấy một hộp thoại yêu cầu nhập API Key.
-    -   Dán API key của bạn vào ô nhập liệu và nhấn **"Bắt đầu"**.
+    -   Dán API key của bạn vào ô nhập liệu và nhấn **"Xác nhận"**.
     -   Bây giờ bạn có thể bắt đầu làm bài trắc nghiệm và sử dụng chatbot.
 
 ### Dành cho Lập trình viên (Chạy trên máy local)
@@ -65,25 +65,15 @@ Dự án này sử dụng Vite làm công cụ build. Bạn cần có [Node.js](
     npm install
     ```
 
-3.  **Tạo file `.env.local`**:
-    -   Trong thư mục gốc của dự án, sao chép file `.env.example` (nếu có) hoặc tạo một file mới có tên là `.env.local`.
-
-4.  **Thêm API Key**:
-    -   Mở file `.env.local` và thêm dòng sau, thay `YOUR_API_KEY_HERE` bằng API key bạn đã lấy từ Google AI Studio:
-        ```
-        VITE_API_KEY=YOUR_API_KEY_HERE
-        ```
-    -   **Lưu ý**: Tên biến phải bắt đầu bằng `VITE_` để Vite có thể đọc được.
-
-5.  **Chạy ứng dụng**:
+3.  **Chạy ứng dụng**:
     -   Khởi động server phát triển bằng lệnh:
         ```bash
         npm run dev
         ```
-    -   Mở trình duyệt và truy cập vào địa chỉ được cung cấp 
-    -   Ứng dụng sẽ tự động đọc API key và bạn sẽ vào thẳng trang chủ.
+    -   Mở trình duyệt và truy cập vào địa chỉ được cung cấp (thường là `http://localhost:5173`).
+    -   Giống như người dùng thông thường, bạn sẽ được yêu cầu nhập API Key trong giao diện web. Key này sẽ được lưu tạm thời trong `sessionStorage` của trình duyệt.
 
-6.  **Build để triển khai (Deploy)**:
+4.  **Build để triển khai (Deploy)**:
     -   Khi bạn đã sẵn sàng deploy, chạy lệnh sau:
         ```bash
         npm run build
