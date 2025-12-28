@@ -1,5 +1,6 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { Quiz, Question, Subject } from '../types';
+import { getApiKey } from './apiKeyService';
 
 export const getAvailableQuizzes = (): Subject[] => ([
   {
@@ -68,9 +69,9 @@ export const getAvailableQuizzes = (): Subject[] => ([
 ]);
 
 export const generateQuizWithAI = async (subjectName: string, quizTitle: string): Promise<Quiz | null> => {
-  const apiKey = import.meta.env.VITE_API_KEY;
+  const apiKey = getApiKey();
   if (!apiKey) {
-    alert("Lỗi: Không tìm thấy API key. Vui lòng cấu hình VITE_API_KEY.");
+    alert("Lỗi: Không tìm thấy API key. Vui lòng nhập API key của bạn.");
     return null;
   }
   
@@ -135,7 +136,7 @@ export const generateQuizWithAI = async (subjectName: string, quizTitle: string)
 };
 
 export const checkAnswersWithAI = async (questions: Question[], userAnswers: { [key: number]: string }): Promise<number> => {
-  const apiKey = import.meta.env.VITE_API_KEY;
+  const apiKey = getApiKey();
   if (!apiKey) {
     alert("Lỗi: Không tìm thấy API key. Không thể chấm điểm.");
     return 0;
