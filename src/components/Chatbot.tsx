@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { createChatSession } from '../services/geminiService';
 import { ChatIcon, CloseIcon, SendIcon, BrainIcon, UserIcon } from './icons';
@@ -9,10 +8,7 @@ interface Message {
   sender: 'user' | 'bot';
 }
 
-// FIX: Removed ChatbotProps interface as apiKey is no longer a prop.
-interface ChatbotProps {}
-
-const Chatbot: React.FC<ChatbotProps> = () => {
+const Chatbot: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [chat, setChat] = useState<Chat | null>(null);
   const [messages, setMessages] = useState<Message[]>([
@@ -23,14 +19,13 @@ const Chatbot: React.FC<ChatbotProps> = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // FIX: The apiKey is no longer passed as a prop. createChatSession now uses the environment variable directly.
-    // The effect will run once on mount.
     const session = createChatSession();
-    setChat(session);
-    if (!session) {
-      setMessages(prev => [...prev, { text: 'Không thể khởi tạo trợ lý AI. Vui lòng kiểm tra lại API key của bạn và làm mới trang.', sender: 'bot' }]);
+    if (session) {
+      setChat(session);
+    } else {
+      setMessages(prev => [...prev, { text: 'Không thể khởi tạo trợ lý AI. Vui lòng kiểm tra lại cấu hình API key.', sender: 'bot' }]);
     }
-  }, []); // Rerun if the key changes.
+  }, []);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });

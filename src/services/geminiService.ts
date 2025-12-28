@@ -1,12 +1,14 @@
-
 import { GoogleGenAI, Chat } from "@google/genai";
 
-// FIX: The apiKey parameter is removed. The function now uses process.env.API_KEY directly.
 export const createChatSession = (): Chat | null => {
-    // FIX: The check for a passed-in apiKey is removed, assuming process.env.API_KEY is available.
+    const apiKey = import.meta.env.VITE_API_KEY;
+    if (!apiKey) {
+        console.error("API key for Gemini is required. Make sure to set VITE_API_KEY in your .env file.");
+        return null;
+    }
+    
     try {
-        // FIX: The GoogleGenAI constructor now exclusively uses process.env.API_KEY.
-        const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+        const ai = new GoogleGenAI({ apiKey });
         return ai.chats.create({
             model: 'gemini-3-flash-preview',
             config: {

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Subject, Quiz } from '../types';
 import { ArrowLeftIcon } from './icons';

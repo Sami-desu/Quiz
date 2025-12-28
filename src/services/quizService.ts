@@ -1,7 +1,6 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { Quiz, Question, Subject } from '../types';
 
-// Hardcoded list of subjects and topics for the UI. No questions or answers are stored here.
 export const getAvailableQuizzes = (): Subject[] => ([
   {
     id: 'math',
@@ -68,11 +67,10 @@ export const getAvailableQuizzes = (): Subject[] => ([
   },
 ]);
 
-// This function dynamically generates a quiz using the Gemini API.
 export const generateQuizWithAI = async (subjectName: string, quizTitle: string): Promise<Quiz | null> => {
   const apiKey = import.meta.env.VITE_API_KEY;
   if (!apiKey) {
-    alert("Lỗi: Không tìm thấy API key. Không thể tạo đề thi.");
+    alert("Lỗi: Không tìm thấy API key. Vui lòng cấu hình VITE_API_KEY.");
     return null;
   }
   
@@ -118,27 +116,24 @@ export const generateQuizWithAI = async (subjectName: string, quizTitle: string)
 
     const text = response.text;
     if (!text) {
-        throw new Error("Phản hồi từ AI không hợp lệ.");
+        throw new Error("Phản hồi từ AI không hợp lệ hoặc rỗng.");
     }
     const result = JSON.parse(text.trim());
     
-    // Construct a Quiz object to be used by the UI
     const newQuiz: Quiz = {
-        id: `${subjectName}-${quizTitle}-${Date.now()}`, // Unique ID for the generated quiz
+        id: `${subjectName}-${quizTitle}-${Date.now()}`,
         title: quizTitle,
         questions: result.questions,
     };
     return newQuiz;
 
   } catch (error) {
-    console.error("Error generating quiz with AI:", error);
+    console.error("Lỗi khi tạo đề thi bằng AI:", error);
     alert("Đã có lỗi xảy ra trong quá trình tạo đề thi bằng AI. Vui lòng thử lại.");
     return null;
   }
 };
 
-
-// This function securely checks answers by sending the questions and user answers to the AI.
 export const checkAnswersWithAI = async (questions: Question[], userAnswers: { [key: number]: string }): Promise<number> => {
   const apiKey = import.meta.env.VITE_API_KEY;
   if (!apiKey) {
@@ -183,19 +178,19 @@ export const checkAnswersWithAI = async (questions: Question[], userAnswers: { [
 
     const text = response.text;
     if (!text) {
-        throw new Error("Phản hồi từ AI không hợp lệ.");
+        throw new Error("Phản hồi từ AI không hợp lệ hoặc rỗng.");
     }
     const result = JSON.parse(text.trim());
 
     if (typeof result.score === 'number') {
       return result.score;
     } else {
-      console.error("AI response did not contain a valid score.", result);
+      console.error("AI không trả về điểm số hợp lệ.", result);
       return 0;
     }
 
   } catch (error) {
-    console.error("Error checking answers with AI:", error);
+    console.error("Lỗi khi chấm điểm bằng AI:", error);
     alert("Đã có lỗi xảy ra trong quá trình chấm điểm bằng AI. Vui lòng thử lại.");
     return 0;
   }
