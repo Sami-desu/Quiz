@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Quiz } from '../types';
 import { checkAnswersWithAI } from '../services/quizService';
@@ -6,7 +5,6 @@ import { checkAnswersWithAI } from '../services/quizService';
 interface QuizViewProps {
   quiz: Quiz;
   onFinish: (score: number) => void;
-  // FIX: Removed apiKey prop. The key is now handled by the service.
 }
 
 const QuizView: React.FC<QuizViewProps> = ({ quiz, onFinish }) => {
@@ -38,13 +36,15 @@ const QuizView: React.FC<QuizViewProps> = ({ quiz, onFinish }) => {
       setTimeLeft(timeLeft - 1);
     }, 1000);
     return () => clearTimeout(timer);
-  }, [timeLeft, isSubmitting, quiz]); // Added quiz dependency to reset timer on new quiz
+  }, [timeLeft, isSubmitting]);
 
   useEffect(() => {
     // Reset state when a new quiz is generated (e.g., on restart)
     setCurrentQuestionIndex(0);
     setSelectedAnswers({});
-    setTimeLeft(quiz.questions.length * 30);
+    if (quiz.questions) {
+      setTimeLeft(quiz.questions.length * 30);
+    }
   }, [quiz]);
 
   const handleSelectAnswer = (option: string) => {
@@ -61,10 +61,10 @@ const QuizView: React.FC<QuizViewProps> = ({ quiz, onFinish }) => {
   };
 
   const handleSubmit = async () => {
-    if (isSubmitting) return;
+    if (isSubmitting || !quiz.questions) return; // Guard against no questions
     setIsSubmitting(true);
     try {
-      // FIX: The apiKey is no longer passed to checkAnswersWithAI.
+      // Pass the actual questions to the AI for grading, not just an ID
       const score = await checkAnswersWithAI(quiz.questions, selectedAnswers);
       onFinish(score);
     } catch (error) {

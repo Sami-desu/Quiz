@@ -1,4 +1,3 @@
-
 import { GoogleGenAI, Type } from "@google/genai";
 import { Quiz, Question, Subject } from '../types';
 
@@ -70,13 +69,15 @@ export const getAvailableQuizzes = (): Subject[] => ([
 ]);
 
 // This function dynamically generates a quiz using the Gemini API.
-// FIX: Removed apiKey parameter. The function now uses process.env.API_KEY.
 export const generateQuizWithAI = async (subjectName: string, quizTitle: string): Promise<Quiz | null> => {
-  // FIX: Removed apiKey check as per guidelines. Assume process.env.API_KEY is available.
+  const apiKey = import.meta.env.VITE_API_KEY;
+  if (!apiKey) {
+    alert("Lỗi: Không tìm thấy API key. Không thể tạo đề thi.");
+    return null;
+  }
   
   try {
-    // FIX: Initialize with process.env.API_KEY.
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+    const ai = new GoogleGenAI({ apiKey });
     const prompt = `
       Hãy tạo một bài thi trắc nghiệm gồm 5 câu hỏi về chủ đề "${quizTitle}" trong môn học "${subjectName}".
       Mỗi câu hỏi phải có 4 lựa chọn.
@@ -115,7 +116,11 @@ export const generateQuizWithAI = async (subjectName: string, quizTitle: string)
       },
     });
 
-    const result = JSON.parse(response.text.trim());
+    const text = response.text;
+    if (!text) {
+        throw new Error("Phản hồi từ AI không hợp lệ.");
+    }
+    const result = JSON.parse(text.trim());
     
     // Construct a Quiz object to be used by the UI
     const newQuiz: Quiz = {
@@ -134,13 +139,15 @@ export const generateQuizWithAI = async (subjectName: string, quizTitle: string)
 
 
 // This function securely checks answers by sending the questions and user answers to the AI.
-// FIX: Removed apiKey parameter. The function now uses process.env.API_KEY.
 export const checkAnswersWithAI = async (questions: Question[], userAnswers: { [key: number]: string }): Promise<number> => {
-  // FIX: Removed apiKey check as per guidelines. Assume process.env.API_KEY is available.
+  const apiKey = import.meta.env.VITE_API_KEY;
+  if (!apiKey) {
+    alert("Lỗi: Không tìm thấy API key. Không thể chấm điểm.");
+    return 0;
+  }
   
   try {
-    // FIX: Initialize with process.env.API_KEY.
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+    const ai = new GoogleGenAI({ apiKey });
     const prompt = `
       Bạn là một giám khảo chấm thi trắc nghiệm. Dưới đây là danh sách các câu hỏi đã được đưa cho thí sinh, và bài làm của họ.
       Nhiệm vụ của bạn là:
@@ -174,7 +181,11 @@ export const checkAnswersWithAI = async (questions: Question[], userAnswers: { [
       },
     });
 
-    const result = JSON.parse(response.text.trim());
+    const text = response.text;
+    if (!text) {
+        throw new Error("Phản hồi từ AI không hợp lệ.");
+    }
+    const result = JSON.parse(text.trim());
 
     if (typeof result.score === 'number') {
       return result.score;
