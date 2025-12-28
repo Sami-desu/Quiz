@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { createChatSession } from '../services/geminiService';
 import { ChatIcon, CloseIcon, SendIcon, BrainIcon, UserIcon } from './icons';
-import { Chat } from '@google/genai';
+import { Chat, GenerateContentResponse } from '@google/genai';
 
 interface Message {
   text: string;
@@ -57,7 +57,8 @@ const Chatbot: React.FC<ChatbotProps> = ({ isKeySet }) => {
     setIsLoading(true);
 
     try {
-      const result = await chat.sendMessage({ message: input });
+      // FIX: The `sendMessage` method expects an object with a `message` property, not a plain string.
+      const result: GenerateContentResponse = await chat.sendMessage({ message: input });
       const text = result.text;
       const botMessage: Message = { text: text || "Tôi không thể xử lý yêu cầu này.", sender: 'bot' };
       setMessages(prev => [...prev, botMessage]);
