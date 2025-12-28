@@ -58,7 +58,7 @@ const ApiKeyPrompt: React.FC<ApiKeyPromptProps> = ({ onSubmit }) => {
           rel="noopener noreferrer"
           className="text-purple-400 hover:text-purple-300 underline"
         >
-          Google AI Studio
+           Google AI Studio
         </a>
       </p>
 
