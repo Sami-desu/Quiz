@@ -1,3 +1,27 @@
+## Đây là bài tập nhà trường giao
+## Đề bài
+# Sản phẩm sáng tạo tạo bởi AI 
+Mỗi nhóm phải tạo ít nhất 1 sản phẩm có sử dụng công cụ AI.
+Hình thức sản phẩm (chọn 1 hoặc kết hợp):
+Video ngắn (từ 30s trở lên)
+Truyện tranh / comic
+Infographic
+Bài hát / đoạn nhạc
+Câu chuyện ngắn / kịch bản 
+Chatbot mô phỏng (không cần code phức tạp)
+Sản phẩm sáng tạo khác 
+Yêu cầu:Phải nêu rõ công cụ AI đã sử dụng
+Sản phẩm phù hợp với chủ đề đã chọn
+Có ý nghĩa truyền thông / giáo dục / minh họa
+Ví dụ công cụ AI có thể dùng:
+ChatGPT (viết nội dung, kịch bản)
+Canva AI (infographic, poster)
+DALL·E / Midjourney (hình ảnh)
+Veo3 (video)
+Suno / Soundraw (âm nhạc)……
+
+# Vì vậy sản phẩm này hoàn toàn do sự hỗ trợ của Gemini 2.5 pro và Github Copilot làm ra
+
 # Quiz Học Tập Thông Minh
 
 Một ứng dụng web trắc nghiệm học tập tương tác, được xây dựng bằng React, TypeScript và Tailwind CSS. Ứng dụng tích hợp chatbot Gemini AI để hỗ trợ người dùng giải đáp thắc mắc và nâng cao trải nghiệm học tập.
