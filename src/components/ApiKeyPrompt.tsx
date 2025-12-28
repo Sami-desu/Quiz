@@ -53,7 +53,7 @@ const ApiKeyPrompt: React.FC<ApiKeyPromptProps> = ({ onSubmit }) => {
       <p className="text-slate-400 text-xs mt-4">
         Bạn có thể lấy API key từ{' '}
         <a
-          href="https://ai.google.dev/api/keys"
+          href="https://aistudio.google.com/api-keys"
           target="_blank"
           rel="noopener noreferrer"
           className="text-purple-400 hover:text-purple-300 underline"
