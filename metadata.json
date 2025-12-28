@@ -1,0 +1,5 @@
+{
+  "name": "Quiz Học Tập Thông Minh",
+  "description": "Một ứng dụng web trắc nghiệm học tập tương tác, tích hợp chatbot Gemini AI để hỗ trợ giải đáp thắc mắc và nâng cao trải nghiệm học tập.",
+  "requestFramePermissions": []
+}
