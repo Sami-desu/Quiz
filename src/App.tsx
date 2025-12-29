@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Subject, Quiz as QuizType } from './types';
+import { Subject, Quiz as QuizType, ReviewResult } from './types';
 import { getAvailableQuizzes, generateQuizWithAI } from './services/quizService';
 import HomeComponent from './components/HomeComponent';
 import QuizSelection from './components/QuizSelection';
@@ -9,7 +9,7 @@ import Chatbot from './components/Chatbot';
 import ApiKeyPrompt from './components/ApiKeyPrompt';
 import { setApiKey, getApiKey } from './services/apiKeyService';
 
-type View = 'HOME' | 'QUIZ_SELECTION' | 'QUIZ' | 'RESULTS';
+type View = 'HOME' | 'QUIZ_SELECTION' | 'QUIZ' | 'RESULTS' | 'REVIEW';
 
 const App: React.FC = () => {
   const [isKeySet, setIsKeySet] = useState(!!getApiKey());
@@ -18,6 +18,7 @@ const App: React.FC = () => {
   const [selectedSubject, setSelectedSubject] = useState<Subject | null>(null);
   const [selectedQuiz, setSelectedQuiz] = useState<QuizType | null>(null);
   const [score, setScore] = useState<number>(0);
+  const [reviewResult, setReviewResult] = useState<ReviewResult | null>(null);
   const [isGeneratingQuiz, setIsGeneratingQuiz] = useState(false);
 
   useEffect(() => {
@@ -47,14 +48,21 @@ const App: React.FC = () => {
     }
   };
 
-  const handleQuizFinish = (finalScore: number) => {
-    setScore(finalScore);
+  const handleQuizFinish = (result: ReviewResult) => {
+    setScore(result.score);
+    setReviewResult(result);
     setView('RESULTS');
   };
 
   const handleRestart = () => {
     if (selectedQuiz) {
         handleSelectQuiz({ id: selectedQuiz.id, title: selectedQuiz.title });
+    }
+  };
+
+  const handleReview = () => {
+    if (reviewResult) {
+      setView('REVIEW');
     }
   };
 
@@ -107,7 +115,33 @@ const App: React.FC = () => {
             totalQuestions={selectedQuiz.questions?.length || 0}
             onRestart={handleRestart}
             onGoHome={handleGoHome}
+            onReview={handleReview}
           />
+        );
+      case 'REVIEW':
+        return reviewResult && selectedQuiz && (
+          <div className="w-full max-w-3xl">
+            {/* Lazy-load Review view component here inline to keep changes small */}
+            <div className="w-full bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-2xl p-8 shadow-2xl">
+              <h2 className="text-3xl font-bold mb-4">Xem đáp án</h2>
+              <div className="space-y-4">
+                {reviewResult.reviews.map((r) => {
+                  const q = selectedQuiz.questions?.find(q => q.id === r.id);
+                  return (
+                    <div key={r.id} className="p-4 rounded-lg border bg-slate-900">
+                      <h3 className="font-semibold text-white mb-2">{q?.question}</h3>
+                      <p className="text-slate-300 mb-2">Đáp án đúng: <span className="font-bold text-green-400">{r.correctAnswer}</span></p>
+                      <p className="text-slate-300">Câu trả lời của bạn: <span className={`font-bold ${r.isCorrect ? 'text-green-300' : 'text-red-400'}`}>{r.userAnswer ?? 'Không trả lời'}</span></p>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="flex justify-center mt-6 space-x-4">
+                <button onClick={() => { setView('RESULTS'); }} className="px-6 py-2 bg-slate-600 rounded text-white">Quay lại</button>
+                <button onClick={handleGoHome} className="px-6 py-2 bg-purple-600 rounded text-white">Về trang chủ</button>
+              </div>
+            </div>
+          </div>
         );
       case 'HOME':
       default:

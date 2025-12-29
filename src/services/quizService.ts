@@ -1,5 +1,5 @@
 import { GoogleGenAI, Type } from "@google/genai";
-import { Quiz, Question, Subject } from '../types';
+import { Quiz, Question, Subject, ReviewResult } from '../types';
 import { getApiKey } from './apiKeyService';
 
 export const getAvailableQuizzes = (): Subject[] => ([
@@ -135,11 +135,15 @@ export const generateQuizWithAI = async (subjectName: string, quizTitle: string)
   }
 };
 
-export const checkAnswersWithAI = async (questions: Question[], userAnswers: { [key: number]: string }): Promise<number> => {
+export const checkAnswersWithAI = async (questions: Question[], userAnswers: { [key: number]: string }): Promise<ReviewResult> => {
   const apiKey = getApiKey();
   if (!apiKey) {
     alert("Lỗi: Không tìm thấy API key. Không thể chấm điểm.");
-    return 0;
+    return {
+      score: 0,
+      total: questions.length,
+      reviews: questions.map(q => ({ id: q.id, correctAnswer: '', userAnswer: userAnswers[q.id] ?? null, isCorrect: false })),
+    };
   }
   
   try {
@@ -147,10 +151,18 @@ export const checkAnswersWithAI = async (questions: Question[], userAnswers: { [
     const prompt = `
       Bạn là một giám khảo chấm thi trắc nghiệm. Dưới đây là danh sách các câu hỏi đã được đưa cho thí sinh, và bài làm của họ.
       Nhiệm vụ của bạn là:
-      1. Với mỗi câu hỏi, hãy xác định đáp án nào là đúng.
+      1. Với mỗi câu hỏi, hãy xác định đáp án đúng (lấy ra chuỗi lựa chọn chính xác).
       2. So sánh đáp án đúng đó với câu trả lời của thí sinh.
       3. Tính tổng số câu trả lời đúng.
-      Chỉ trả về kết quả dưới dạng một đối tượng JSON duy nhất có khóa là "score".
+      Chỉ trả về kết quả dưới dạng một đối tượng JSON với cấu trúc sau:
+      {
+        "score": <số đúng>,
+        "total": <tổng số câu>,
+        "reviews": [
+          { "id": <số>, "correctAnswer": <string>, "userAnswer": <string|null>, "isCorrect": <boolean> },
+          ...
+        ]
+      }
 
       Dữ liệu câu hỏi:
       ${JSON.stringify(questions, null, 2)}
@@ -167,12 +179,23 @@ export const checkAnswersWithAI = async (questions: Question[], userAnswers: { [
         responseSchema: {
           type: Type.OBJECT,
           properties: {
-            score: {
-              type: Type.INTEGER,
-              description: 'Tổng số câu trả lời đúng.'
-            },
+            score: { type: Type.INTEGER },
+            total: { type: Type.INTEGER },
+            reviews: {
+              type: Type.ARRAY,
+              items: {
+                type: Type.OBJECT,
+                properties: {
+                  id: { type: Type.INTEGER },
+                  correctAnswer: { type: Type.STRING },
+                  userAnswer: { type: Type.STRING },
+                  isCorrect: { type: Type.BOOLEAN },
+                },
+                required: ["id", "correctAnswer", "isCorrect"],
+              }
+            }
           },
-          required: ["score"],
+          required: ["score", "total", "reviews"],
         },
       },
     });
@@ -183,16 +206,31 @@ export const checkAnswersWithAI = async (questions: Question[], userAnswers: { [
     }
     const result = JSON.parse(text.trim());
 
-    if (typeof result.score === 'number') {
-      return result.score;
-    } else {
-      console.error("AI không trả về điểm số hợp lệ.", result);
-      return 0;
-    }
+    // Basic validation and normalization
+    const score = typeof result.score === 'number' ? result.score : 0;
+    const total = typeof result.total === 'number' ? result.total : questions.length;
+    const reviews = Array.isArray(result.reviews) ? result.reviews.map((r: any) => ({
+      id: r.id,
+      correctAnswer: r.correctAnswer,
+      userAnswer: r.userAnswer ?? null,
+      isCorrect: !!r.isCorrect,
+    })) : questions.map(q => ({ id: q.id, correctAnswer: '', userAnswer: userAnswers[q.id] ?? null, isCorrect: false }));
+
+    const reviewResult: ReviewResult = {
+      score,
+      total,
+      reviews,
+    };
+
+    return reviewResult;
 
   } catch (error) {
     console.error("Lỗi khi chấm điểm bằng AI:", error);
     alert("Đã có lỗi xảy ra trong quá trình chấm điểm bằng AI. Vui lòng thử lại.");
-    return 0;
+    return {
+      score: 0,
+      total: questions.length,
+      reviews: questions.map(q => ({ id: q.id, correctAnswer: '', userAnswer: userAnswers[q.id] ?? null, isCorrect: false })),
+    };
   }
 };

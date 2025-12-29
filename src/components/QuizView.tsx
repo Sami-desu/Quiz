@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Quiz } from '../types';
+import { Quiz, ReviewResult } from '../types';
 import { checkAnswersWithAI } from '../services/quizService';
 
 interface QuizViewProps {
   quiz: Quiz;
-  onFinish: (score: number) => void;
+  onFinish: (result: ReviewResult) => void;
 }
 
 const QuizView: React.FC<QuizViewProps> = ({ quiz, onFinish }) => {
@@ -64,9 +64,9 @@ const QuizView: React.FC<QuizViewProps> = ({ quiz, onFinish }) => {
     if (isSubmitting || !quiz.questions) return; // Guard against no questions
     setIsSubmitting(true);
     try {
-      // Pass the actual questions to the AI for grading, not just an ID
-      const score = await checkAnswersWithAI(quiz.questions, selectedAnswers);
-      onFinish(score);
+      // Pass the actual questions to the AI for grading, return detailed review
+      const reviewResult = await checkAnswersWithAI(quiz.questions, selectedAnswers);
+      onFinish(reviewResult);
     } catch (error) {
       // Error is already handled inside the service with an alert
       setIsSubmitting(false); // Re-enable button on error

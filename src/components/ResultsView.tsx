@@ -5,9 +5,10 @@ interface ResultsViewProps {
   totalQuestions: number;
   onRestart: () => void;
   onGoHome: () => void;
+  onReview?: () => void;
 }
 
-const ResultsView: React.FC<ResultsViewProps> = ({ score, totalQuestions, onRestart, onGoHome }) => {
+const ResultsView: React.FC<ResultsViewProps> = ({ score, totalQuestions, onRestart, onGoHome, onReview }) => {
   const percentage = totalQuestions > 0 ? Math.round((score / totalQuestions) * 100) : 0;
 
   const getFeedback = () => {
@@ -66,6 +67,14 @@ const ResultsView: React.FC<ResultsViewProps> = ({ score, totalQuestions, onRest
         >
           Làm lại
         </button>
+        {onReview && (
+          <button
+            onClick={onReview}
+            className="px-8 py-3 bg-emerald-600 text-white font-bold rounded-lg hover:bg-emerald-500 transition-colors"
+          >
+            Xem đáp án
+          </button>
+        )}
         <button
           onClick={onGoHome}
           className="px-8 py-3 bg-purple-600 text-white font-bold rounded-lg hover:bg-purple-700 transition-colors"

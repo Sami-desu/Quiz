@@ -18,3 +18,16 @@ export interface Subject {
   color: string;
   quizzes: Pick<Quiz, 'id' | 'title'>[];
 }
+
+export interface AnswerReview {
+  id: number;
+  correctAnswer: string;
+  userAnswer?: string;
+  isCorrect: boolean;
+}
+
+export interface ReviewResult {
+  score: number;
+  total: number;
+  reviews: AnswerReview[];
+}
