@@ -10,7 +10,7 @@
 * **Hình thức**: Ứng dụng web + Chatbot AI
 * **Công cụ AI sử dụng**:
 
-  * **Google Gemini 2.5 Pro** – tạo câu hỏi trắc nghiệm & chatbot hỗ trợ học tập
+  * **Google Gemini 2.5 Pro** – tạo câu hỏi trắc nghiệm & chatbot hỗ trợ học tập, hỗ trợ viết mã nguồn
   * **GitHub Copilot** – hỗ trợ viết mã nguồn
 
 ---
